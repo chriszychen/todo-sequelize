@@ -11,9 +11,9 @@
         </h4>
       </div>
       <div class="col-auto">
-        <a class="btn btn-secondary" href="./todos/{{ this.id }}">detail</a>
-        <a class="btn btn-success" href="./todos/{{ this.id }}/edit">edit</a>
-        <form action="./todos/{{ this.id }}?_method=DELETE" method="POST" style="display: inline;">
+        <a class="btn btn-secondary" href="/todos/{{ this.id }}">detail</a>
+        <a class="btn btn-success" href="/todos/{{ this.id }}/edit">edit</a>
+        <form action="/todos/{{ this.id }}?_method=DELETE" method="POST" style="display: inline;">
           <button class="btn btn-danger" type="submit">delete</button>
         </form>
       </div>
