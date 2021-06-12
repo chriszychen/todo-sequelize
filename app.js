@@ -1,6 +1,9 @@
 const express = require('express')
+const session = require('express-session')
+const passport = require('passport')
 const exphbs = require('express-handlebars')
 const methodOverride = require('method-override')
+const usePassport = require('./config/passport')
 const bcrypt = require('bcryptjs')
 const db = require('./models')
 const Todo = db.Todo
@@ -13,6 +16,14 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
+
+app.use(session({
+  secret: 'ThisIsMyTodoSecret',
+  resave: false,
+  saveUninitialized: true
+}))
+
+usePassport(app)
 
 app.get('/', (req, res) => {
   return Todo.findAll({
@@ -34,9 +45,10 @@ app.get('/users/login', (req, res) => {
   res.render('login')
 })
 
-app.post('/users/login', (req, res) => {
-  res.send('login')
-})
+app.post('/users/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/users/login'
+}))
 
 app.get('/users/register', (req, res) => {
   res.render('register')
@@ -68,7 +80,8 @@ app.post('/users/register', (req, res) => {
 })
 
 app.get('/users/logout', (req, res) => {
-  res.send('logout')
+  req.logout()
+  res.redirect('/users/login')
 })
 
 app.listen(PORT, () => console.log(`App is running on http://localhost:${PORT}`))
